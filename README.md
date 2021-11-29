@@ -20,7 +20,7 @@ NPM Packages:
 
     node index.js <country_code> <output>
 
-+ country_code - The country code to scrape.
++ country_code - The country camera's to scrape via country code.
 + output - The output of the results.
 
 ## License
