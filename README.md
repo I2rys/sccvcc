@@ -1,5 +1,5 @@
 <h1 align="center">SCCVCC</h1>
-<h4 align="center">Camera's scraper via country code</h4>
+<h4 align="center">Country camera's scraper via country code</h4>
 <p align="center">
 	<a href="https://github.com/I2rys/SCCVCC/blob/main/LICENSE"><img src="https://img.shields.io/github/license/I2rys/SCCVCC?style=flat-square"></img></a>
 	<a href="https://github.com/I2rys/SCCVCC/issues"><img src="https://img.shields.io/github/issues/I2rys/SCCVCC.svg"></img></a>
