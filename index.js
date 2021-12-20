@@ -22,32 +22,34 @@ var page = 0
 
 Self_Args[0] = Self_Args[0].toLowerCase()
 
-console.log("Scraping has started, please wait.")
-console.log()
+console.log("Scraping has started, please wait.\n")
+
 Scrape()
 function Scrape(){
     if(page == max_page){
         console.log()
+        console.log(`${qualified_links.length} camera's found.`)
+        console.log(`Saving the results to ${Self_Args[1]} please wait.`)
         Fs.writeFileSync(Self_Args[1], qualified_links.join("\n"), "utf8")
-        console.log(`${qualified_links.length} camera's found and saved to ${Self_Args[1]}.`)
+        console.log(`Results successfully saved to ${Self_Args[1]}`)
         console.log("Finished scraping.")
         process.exit()
     }
 
     Request(`https://www.insecam.org/en/bycountry/${Self_Args[0]}/?page=${page}`, function(err, res, body){
-        if(body.indexOf("Page not found (404)") != -1){
+        if(body.indexOf("Page not found (404)") !== -1){
             console.log("Invalid country_code.")
             process.exit()
         }
 
-        if(max_page == true){
+        if(max_page === true){
             max_page = body.match(/pagenavigator\("\?page=", (\d+)/)[0].replace('pagenavigator("?page=", ', "")
         }
 
         let links = body.match(/http:..\d+.\d+.\d+.\d+:\d+/g)
         
         for( i in links ){
-            if(qualified_links.indexOf(links[i]) == -1){
+            if(qualified_links.indexOf(links[i]) === -1){
                 console.log(links[i])
                 qualified_links.push(links[i])
             }
