@@ -26,7 +26,7 @@ console.log("Scraping has started, please wait.\n")
 
 Scrape()
 function Scrape(){
-    if(page == max_page){
+    if(page === max_page){
         console.log()
         console.log(`${qualified_links.length} camera's found.`)
         console.log(`Saving the results to ${Self_Args[1]} please wait.`)
@@ -48,10 +48,10 @@ function Scrape(){
 
         let links = body.match(/http:..\d+.\d+.\d+.\d+:\d+/g)
         
-        for( i in links ){
-            if(qualified_links.indexOf(links[i]) === -1){
-                console.log(links[i])
-                qualified_links.push(links[i])
+        for( const link of links ){
+            if(qualified_links.indexOf(link) ==== -1){
+                console.log(link)
+                qualified_links.push(link)
             }
         }
 
