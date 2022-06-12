@@ -18,9 +18,9 @@ NPM Packages:
     
 ## Usage
 
-    node index.js <country_code> <output>
+    node index.js <countryCode> <output>
 
-+ country_code - The country camera's to scrape via country code.
++ countryCode - The country camera's to scrape via country code.
 + output - The output of the results.
 
 ## License
