@@ -1,61 +1,52 @@
-//Dependencies
-const Request = require("request")
+"use strict";
+
+// Dependencies
+const request = require("request-async")
 const Fs = require("fs")
 
-//Variables
-const Self_Args = process.argv.slice(2)
+// Variables
+const args = process.argv.slice(2)
 
-//Main
-if(!Self_Args.length){
-    console.log("node index.js <country_code> <output>")
-    process.exit()
-}
+// args
+if(!args.length) return console.log("node index.js <countryCode> <output>")
+if(!args[1]) return console.log("Invalid output.")
 
-if(!Self_Args[1]){
-    console.log("Invalid output.")
-    process.exit()
-}
-
-var qualified_links = []
-var max_page = true
+var qualifiedLinks = []
+var maxPage = true
 var page = 0
 
-Self_Args[0] = Self_Args[0].toLowerCase()
+args[0] = args[0].toLowerCase()
 
 console.log("Scraping has started, please wait.\n")
 
-Scrape()
-function Scrape(){
-    if(page === max_page){
+scrapeCameras()
+async function scrapeCameras(){
+    if(page === maxPage){
         console.log()
-        console.log(`${qualified_links.length} camera's found.`)
-        console.log(`Saving the results to ${Self_Args[1]} please wait.`)
-        Fs.writeFileSync(Self_Args[1], qualified_links.join("\n"), "utf8")
-        console.log(`Results successfully saved to ${Self_Args[1]}`)
+        console.log(`${qualifiedLinks.length} camera's found.`)
+        console.log(`Saving the results to ${args[1]} please wait.`)
+        Fs.writeFileSync(args[1], qualifiedLinks.join("\n"), "utf8")
+        console.log(`Results successfully saved to ${args[1]}`)
         console.log("Finished scraping.")
         process.exit()
     }
 
-    Request(`https://www.insecam.org/en/bycountry/${Self_Args[0]}/?page=${page}`, function(err, res, body){
-        if(body.indexOf("Page not found (404)") !== -1){
-            console.log("Invalid country_code.")
-            process.exit()
-        }
+    var response = await request(`http://insecam.org/en/bycountry/${args[0]}/?page=${page}`)
+    response = response.body
 
-        if(max_page === true){
-            max_page = body.match(/pagenavigator\("\?page=", (\d+)/)[0].replace('pagenavigator("?page=", ', "")
-        }
+    if(response.indexOf("Page not found (404)") !== -1) return console.log("Invalid countryCode.")
 
-        let links = body.match(/http:..\d+.\d+.\d+.\d+:\d+/g)
-        
-        for( const link of links ){
-            if(qualified_links.indexOf(link) ==== -1){
-                console.log(link)
-                qualified_links.push(link)
-            }
-        }
+    if(maxPage) maxPage = response.match(/pagenavigator\("\?page=", (\d+)/)[0].replace('pagenavigator("?page=", ', "")
 
-        page++
-        Scrape()
-    })
+    const links = response.match(/http:..\d+.\d+.\d+.\d+:\d+/g)
+    
+    for( const link of links ){
+        if(qualifiedLinks.indexOf(link) === -1){
+            console.log(link)
+            qualifiedLinks.push(link)
+        }
+    }
+
+    page++
+    scrapeCameras()
 }
